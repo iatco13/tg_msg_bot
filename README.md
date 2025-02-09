@@ -18,7 +18,7 @@ This project implements a Telegram bot that forwards messages to a list of speci
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/tg_msg_bot.git
+    git clone https://github.com/iatco13/tg_msg_bot.git
     cd tg_msg_bot
     ```
 
