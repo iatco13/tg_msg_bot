@@ -51,8 +51,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 def main() -> None:
     """Starts the bot and registers the message handler."""
     application = Application.builder().token(TG_TOKEN).read_timeout(TG_DELAY).get_updates_read_timeout(TG_DELAY).write_timeout(TG_DELAY).get_updates_write_timeout(TG_DELAY).pool_timeout(TG_DELAY).get_updates_pool_timeout(TG_DELAY).connect_timeout(TG_DELAY).get_updates_connect_timeout(TG_DELAY).build()
-    
-    application.add_handler(MessageHandler(filters.ALL, handle_message))
+
+    application.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, handle_message))
     
     application.run_polling()
     logger.info("Bot started.")
