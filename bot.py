@@ -50,8 +50,8 @@ application = (
 )
 
 
-async def forward_message(update: Update, context: CallbackContext) -> None:
-    logger.info(f"Processing message: {update.message.text}")
+async def handle_forward_message(update: Update, context: CallbackContext) -> None:
+    logger.info(f"Processing message: {update.message}")
     config.load_dynamic_config()
     sender_id = update.effective_user.id
     sender_id_str = str(sender_id)
@@ -62,19 +62,19 @@ async def forward_message(update: Update, context: CallbackContext) -> None:
         await update.message.reply_text("You are not an admin!")
         return
 
-    message_text = update.message.text
     authorized_chat_ids: List[str] = config.get_authorized_chat_ids()
     
     tasks = []
     for chat_id in authorized_chat_ids:
-        tasks.append(send_message_with_logging(chat_id, message_text))
+        tasks.append(send_message_with_logging(chat_id, update, context))
     
     await asyncio.gather(*tasks)
 
 
-async def send_message_with_logging(chat_id: str, message_text: str):
+async def send_message_with_logging(chat_id: str, update: Update, context: CallbackContext):
     try:
-        await application.bot.send_message(chat_id=chat_id, text=message_text)
+        #await application.bot.send_message(chat_id=chat_id, text=message)
+        await context.bot.forward_message(chat_id=chat_id, from_chat_id=update.effective_chat.id, message_id=update.message.message_id)
         chat_name = next((chat["name"] for chat in config.chats if chat["id"] == chat_id), chat_id)
         logger.info(f"Message forwarded to {chat_name} ({chat_id})")
     except Exception as e:
@@ -131,7 +131,7 @@ async def set_webhook() -> bool:
         return result
         
 
-application.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, forward_message))
+application.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, handle_forward_message))
 application.add_handler(ChatMemberHandler(handle_chat_member, ChatMemberHandler.MY_CHAT_MEMBER))
 application.add_error_handler(error_handler)
 

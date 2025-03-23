@@ -46,3 +46,7 @@ This project implements a Telegram bot that forwards messages to a list of speci
 To start the bot, run:
 ```sh
 ./bot.sh start
+
+To stop the bot, run:
+```sh
+./bot.sh stop
