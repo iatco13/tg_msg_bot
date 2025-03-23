@@ -3,3 +3,8 @@
 __pycache__/*
 *.log
 nohup.out
+config.json
+.pid
+bot.out
+certs/*
+.pem

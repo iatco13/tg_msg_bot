@@ -1,0 +1,10 @@
+{
+    "admins": [
+        {"name": "Alice", "id": "123456789"},
+        {"name": "Bob", "id": "987654321"}
+    ],
+    "chats": [
+        {"name": "Group A", "id": "-100123456789", "authorized": true},
+        {"name": "Group B", "id": "-100987654321", "authorized": false}
+    ]
+}
