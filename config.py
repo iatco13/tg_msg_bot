@@ -22,6 +22,10 @@ class Config:
                 config = json.load(f)
             self.admins = config.get("admins", [])
             self.chats = config.get("chats", [])
+            # Ensure all chats have an "authorized" field, default to True if missing
+            for chat in self.chats:
+                if "authorized" not in chat:
+                    chat["authorized"] = True
         except FileNotFoundError:
             self.admins = []
             self.chats = []
@@ -40,7 +44,12 @@ class Config:
         return [admin["id"] for admin in self.admins]
 
     def get_authorized_chat_ids(self) -> list:
-        return [chat["id"] for chat in self.chats if chat.get("authorized", False)]
+        # Only return chat IDs where authorized is True
+        return [chat["id"] for chat in self.chats if chat.get("authorized", True)]
+    
+    def get_chat_ids(self) -> list:
+        # Returns all chat IDs
+        return [chat["id"] for chat in self.chats]
 
     async def update_chats(self, update=None) -> int:
         """Обновляет список чатов в зависимости от статуса бота в группе."""
@@ -65,13 +74,17 @@ class Config:
                 existing_chats[chat_id] = {
                     "name": chat_name,
                     "id": chat_id,
-                    "authorized": True  # По умолчанию чат авторизован
+                    "authorized": True  # New chats are authorized by default
                 }
+            else:
+                # If the chat already exists, ensure it's authorized
+                existing_chats[chat_id]["authorized"] = True
+                self.logger.info(f"Chat {chat_name} ({chat_id}) re-authorized")
         elif new_status in ["kicked", "left"]:
             # Бот удален из группы
             if chat_id in existing_chats:
-                self.logger.info(f"Removing chat {chat_name} ({chat_id}) from config")
-                del existing_chats[chat_id]
+                self.logger.info(f"Marking chat {chat_name} ({chat_id}) as unauthorized")
+                existing_chats[chat_id]["authorized"] = False  # Set authorized to False instead of removing
 
         # Обновляем список чатов и сохраняем
         self.chats = list(existing_chats.values())
