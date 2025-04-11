@@ -9,21 +9,27 @@
 - SSL/TLS support for webhooks
 
 ## Installation
-```bash
 1. Clone repository:
+```bash
 git clone https://github.com/iatco13/tg_msg_bot.git
 cd tg_msg_bot
+```
 
 2. Create virtual environment:
+```bash
 python3 -m venv .venv
 source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
+```
 
 3. Install dependencies:
+```bash
 pip install -r requirements.txt
+```
 
 ## Configuration
 1. Environment Setup:
+```bash
 cp .env_template.txt .env
 nano .env
 ```
@@ -52,19 +58,23 @@ Example config.json:
 ```
 
 ## Usage
-```bash
 Start bot:
+```bash
 ./bot.sh start
+```
 
 Stop bot:
+```bash
 ./bot.sh stop
+```
 
 View logs:
+```bash
 tail -f bot.log
 ```
 
 ## Webhook Setup (Nginx example)
-```json
+```
 server {
     listen 443 ssl;
     server_name yourdomain.com;
@@ -79,11 +89,12 @@ server {
 ```
 
 ## Troubleshooting
-```bash
 - Webhook issues: Verify SSL certs and bot token
-- Permission errors: `chmod 644 .env config.json`
-- Check detailed logs in `bot.log`
+- Permission errors: 
+```bash 
+chmod 644 .env config.json 
 ```
+- Check detailed logs in `bot.log`
 
 ## License
 GNU GPLv3
