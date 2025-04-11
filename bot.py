@@ -6,6 +6,27 @@
 # License: GNU GPL v.3
 
 
+"""Telegram Message Forwarding Bot.
+
+This bot forwards messages from authorized admins to multiple Telegram groups.
+It supports webhook and polling methods, with comprehensive logging and group management.
+
+The main components are:
+- FastAPI webhook handler
+- Telegram bot application
+- Configuration manager
+- Group discovery system
+
+Example:
+    To run the bot:
+    $ ./bot.sh start
+
+Attributes:
+    TG_DELAY (float): Timeout for Telegram API operations.
+    logger (Logger): Configured logger instance for the application.
+"""
+
+
 import logging
 import os.path
 import sys
@@ -80,8 +101,8 @@ async def handle_forward_message(update: Update, context: CallbackContext) -> No
 
     admin_ids = config.get_admin_ids()
     if sender_id_str not in admin_ids:
-        logger.info(f"User {sender_id} is not an admin")
-        await update.message.reply_text("You are not an admin!")
+        #logger.info(f"User {sender_id} is not an admin")
+        #await update.message.reply_text("You are not an admin!")
         return
 
     authorized_chat_ids: List[str] = config.get_authorized_chat_ids()  # This now only returns chats with authorized=True

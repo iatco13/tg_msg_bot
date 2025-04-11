@@ -1,6 +1,7 @@
 {
     "admins": [
-        {"id": "123456789", "name": "Admin1"}
+        {"id": "123456789", "name": "Admin1"},
+        {"id": "123456780", "name": "Admin2"}
     ],
     "chats": [
         {"name": "Group1", "id": "-100123456789", "authorized": true},

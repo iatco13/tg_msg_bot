@@ -1,9 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
+"""Configuration management for the Telegram bot.
+
+This module handles all configuration aspects including:
+- Environment variables
+- Dynamic chat and admin management
+- Configuration persistence
+
+Attributes:
+    token (str): Telegram bot token
+    bot_id (str): Bot's numeric ID
+    webhook_url (str): Webhook URL for Telegram API
+    cert_pem (str): Path to SSL certificate
+    cert_key (str): Path to SSL private key
+    admins (list): List of admin users
+    chats (list): List of authorized chats
+"""
+
+
 import os
 import json
 from dotenv import load_dotenv
+
 
 class Config:
     def __init__(self, logger) -> None:

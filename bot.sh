@@ -1,5 +1,18 @@
 #!/bin/bash
 
+"""Bot management script.
+
+This script provides start/stop control for the Telegram bot using Gunicorn.
+It handles virtual environment activation, PID management, and SSL configuration.
+
+Usage:
+    ./bot.sh start - Starts the bot
+    ./bot.sh stop - Stops the running bot
+
+Environment:
+    Requires properly configured .env file and SSL certificates.
+"""
+
 VENV_DIR=".venv"
 PYTHON_BIN="$VENV_DIR/bin/python3"
 GUNICORN_BIN="$VENV_DIR/bin/gunicorn"

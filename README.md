@@ -37,8 +37,10 @@ This project implements a Telegram bot that forwards messages to a list of speci
     ```env
     TG_BOT_TOKEN=your_bot_token
     TG_BOT_ID=your_bot_id
-    TG_CHATS=chat_id1,chat_id2
-    TG_ADMINS=admin_id1,admin_id2
+    TG_DELAY=120
+    WEBHOOK_URL="https://your_webhook_server"
+    CERT_PEM=path_to_pem
+    CERT_KEY=path_to_key
     ```
 
 ## Usage
