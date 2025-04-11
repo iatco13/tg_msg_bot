@@ -30,7 +30,7 @@ pip install -r requirements.txt
 ## Configuration
 1. Environment Setup:
 ```bash
-cp .env_template.txt .env
+cp .env_template .env
 nano .env
 ```
 
