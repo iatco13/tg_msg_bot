@@ -1,54 +1,72 @@
-# Telegram Message Bot
-
-This project implements a Telegram bot that forwards messages to a list of specified chats. The bot checks if the sender is an admin and forwards the message to all specified chats.
+# Telegram Message Forwarding Bot
 
 ## Features
-
-- Forwards messages to a list of chats
-- Checks if the sender is an admin
-- Logs bot activities
-
-## Requirements
-
-- Python 3.7+
-- `python-telegram-bot` library
-- `python-dotenv` library
+- Secure message forwarding from admins to authorized groups
+- Dynamic group management (auto-add/remove groups)
+- Webhook & Polling support
+- Comprehensive logging (bot.log)
+- Admin controls with config.json
+- SSL/TLS support for webhooks
 
 ## Installation
+1. Clone repository:
+`git clone https://github.com/iatco13/tg_msg_bot.git`
+`cd tg_msg_bot`
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/iatco13/tg_msg_bot.git
-    cd tg_msg_bot
-    ```
+2. Create virtual environment:
+`python3 -m venv .venv`
+`source .venv/bin/activate`  # Linux/Mac
+`.venv\Scripts\activate`     # Windows
 
-2. Create a virtual environment and activate it:
-    ```sh
-    python3 -m venv .venv
-    source .venv/bin/activate
-    ```
+3. Install dependencies:
+`pip install -r requirements.txt`
 
-3. Install the required packages:
-    ```sh
-    pip install -r requirements.txt
-    ```
+## Configuration
+1. Environment Setup:
+`cp .env_template.txt .env`
+`nano .env`
 
-4. Create a [.env](http://_vscodecontentref_/0) file and add your Telegram bot token, bot ID, chat IDs, and admin IDs:
-    ```env
-    TG_BOT_TOKEN=your_bot_token
-    TG_BOT_ID=your_bot_id
-    TG_DELAY=120
-    WEBHOOK_URL="https://your_webhook_server"
-    CERT_PEM=path_to_pem
-    CERT_KEY=path_to_key
-    ```
+Example .env:
+`TG_BOT_TOKEN=your_bot_token_here`
+`TG_BOT_ID=your_bot_id`
+`WEBHOOK_URL=https://yourdomain.com/webhook`
+`CERT_PEM=certs/fullchain.pem`
+`CERT_KEY=certs/privkey.key`
+`TG_DELAY=30`
+
+2. Admin/Chat Setup:
+`cp config_template.json config.json`
+
+Example config.json:
+`{"admins": [{"id": "123456789", "name": "Admin"}], "chats": [{"name": "Group1", "id": "-100123456789", "authorized": true}]}`
 
 ## Usage
+Start bot:
+`./bot.sh start`
 
-To start the bot, run:
-```sh
-./bot.sh start
+Stop bot:
+`./bot.sh stop`
 
-To stop the bot, run:
-```sh
-./bot.sh stop
+View logs:
+`tail -f bot.log`
+
+## Webhook Setup (Nginx example)
+`server {`
+`    listen 443 ssl;`
+`    server_name yourdomain.com;`
+`    ssl_certificate /path/to/certs/fullchain.pem;`
+`    ssl_certificate_key /path/to/certs/privkey.key;`
+`    location /webhook {`
+`        proxy_pass http://localhost:8443;`
+`        proxy_set_header Host $host;`
+`        proxy_set_header X-Real-IP $remote_addr;`
+`    }`
+`}`
+
+## Troubleshooting
+- Webhook issues: Verify SSL certs and bot token
+- Permission errors: `chmod 644 .env config.json`
+- Check detailed logs in `bot.log`
+
+## License
+GNU GPLv3
