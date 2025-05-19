@@ -13,8 +13,7 @@ Attributes:
     token (str): Telegram bot token
     bot_id (str): Bot's numeric ID
     webhook_url (str): Webhook URL for Telegram API
-    cert_pem (str): Path to SSL certificate
-    cert_key (str): Path to SSL private key
+    port (int): Port for the webhook
     admins (list): List of admin users
     chats (list): List of authorized chats
 """
@@ -30,9 +29,9 @@ class Config:
         load_dotenv()
         self.token: str = os.getenv("TG_BOT_TOKEN")
         self.bot_id: str = os.getenv("TG_BOT_ID")
-        self.webhook_url: str = os.getenv("WEBHOOK_URL")
-        self.cert_pem: str = os.path.abspath(os.path.join(os.path.dirname(__file__), os.getenv("CERT_PEM"))) if os.getenv("CERT_PEM") else None
-        self.cert_key: str = os.path.abspath(os.path.join(os.path.dirname(__file__), os.getenv("CERT_KEY"))) if os.getenv("CERT_KEY") else None
+        _url: str = os.getenv("WEBHOOK_URL")
+        self.port = int(os.getenv("PORT"))
+        self.webhook_url = _url.format(self.port)
         self.logger = logger
         self.load_dynamic_config()
 

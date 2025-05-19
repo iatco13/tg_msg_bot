@@ -1,26 +1,31 @@
 #!/bin/bash
 
-"""Bot management script.
+#Bot management script.
+#
+#This script provides start/stop control for the Telegram bot using Gunicorn.
+#It handles virtual environment activation, PID management.
+#
+#Usage:
+#    ./bot.sh start - Starts the bot
+#    ./bot.sh stop - Stops the running bot
+#
+#Environment:
+#    Requires properly configured .env file.
 
-This script provides start/stop control for the Telegram bot using Gunicorn.
-It handles virtual environment activation, PID management, and SSL configuration.
+# Check if .env file exists
+if [[ ! -f .env ]]; then
+    echo "Error: .env file not found" >&2
+    exit 1
+fi
 
-Usage:
-    ./bot.sh start - Starts the bot
-    ./bot.sh stop - Stops the running bot
-
-Environment:
-    Requires properly configured .env file and SSL certificates.
-"""
+# Load variables from .env
+source .env
 
 VENV_DIR=".venv"
 PYTHON_BIN="$VENV_DIR/bin/python3"
 GUNICORN_BIN="$VENV_DIR/bin/gunicorn"
 SCRIPT="bot:app"
 PID_FILE=".pid"
-CERT_DIR="certs"
-KEYFILE="$CERT_DIR/privkey.pem"
-CERTFILE="$CERT_DIR/fullchain.pem"
 
 start_bot() {
     if [ ! -d "$VENV_DIR" ]; then
@@ -33,13 +38,8 @@ start_bot() {
         exit 1
     fi
 
-    if [ ! -f "$KEYFILE" ] || [ ! -f "$CERTFILE" ]; then
-        echo "SSL certificate files not found: $KEYFILE, $CERTFILE"
-        exit 1
-    fi
-
     echo "Starting bot with Gunicorn..."
-    nohup "$GUNICORN_BIN" "$SCRIPT" -k uvicorn.workers.UvicornWorker --keyfile "$KEYFILE" --certfile "$CERTFILE" --bind 0.0.0.0:8443 > bot.out 2>&1 &
+    nohup "$GUNICORN_BIN" "$SCRIPT" -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT > bot.out 2>&1 &
     BOT_PID=$!
     echo $BOT_PID > "$PID_FILE"
     echo "Bot started with PID $BOT_PID."

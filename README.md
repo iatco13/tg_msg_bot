@@ -39,8 +39,7 @@ Example .env:
 TG_BOT_TOKEN=your_bot_token_here
 TG_BOT_ID=your_bot_id
 WEBHOOK_URL=https://yourdomain.com/webhook
-CERT_PEM=certs/fullchain.pem
-CERT_KEY=certs/privkey.key
+PORT=8001
 TG_DELAY=30
 ```
 
@@ -81,7 +80,7 @@ server {
     ssl_certificate /path/to/certs/fullchain.pem;
     ssl_certificate_key /path/to/certs/privkey.key;
     location /webhook {
-        proxy_pass http://localhost:8443;
+        proxy_pass http://localhost:8001;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }

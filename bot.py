@@ -163,22 +163,13 @@ async def set_webhook() -> bool:
         logger.error("WEBHOOK_URL is not set in .env")
         return False
 
-    if config.cert_pem and config.cert_key:
-        try:
-            with open(config.cert_pem, "rb") as cert_file:
-                result = await application.bot.set_webhook(
-                    url=config.webhook_url,
-                    #certificate=cert_file
-                )
-            logger.info("Webhook set with custom certificate")
-            return result
-        except Exception as e:
-            logger.error(f"Failed to set webhook with certificate: {e}")
-            return False
-    else:
+    try:
         result = await application.bot.set_webhook(url=config.webhook_url)
-        logger.info("Webhook set without certificate")
+        logger.info("Webhook set with custom certificate")
         return result
+    except Exception as e:
+        logger.error(f"Failed to set webhook with certificate: {e}")
+        return False
 
 
 # Group discovery at startup
@@ -261,12 +252,14 @@ async def index():
 
 
 if __name__ == "__main__":
-    # Run the FastAPI app with SSL for webhook
-    uvicorn.run(
-        "bot:app",
-        host="0.0.0.0",
-        port=8443,
-        ssl_keyfile=config.cert_key,
-        ssl_certfile=config.cert_pem,
-        log_level="info"
-    )
+    # Run the FastAPI app
+    try:
+        uvicorn.run(
+            "bot:app",
+            host="0.0.0.0",
+            port=config.port,
+            log_level="info"
+        )
+    except Exception as e:
+        logger.error(f"Failed to start the server: {e}")
+        sys.exit(1)
