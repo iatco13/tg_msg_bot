@@ -29,9 +29,8 @@ class Config:
         load_dotenv()
         self.token: str = os.getenv("TG_BOT_TOKEN")
         self.bot_id: str = os.getenv("TG_BOT_ID")
-        _url: str = os.getenv("WEBHOOK_URL")
         self.port = int(os.getenv("PORT"))
-        self.webhook_url = _url.format(self.port)
+        self.webhook_url: str = os.getenv("WEBHOOK_URL")
         self.logger = logger
         self.load_dynamic_config()
 
